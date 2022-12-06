@@ -26,4 +26,4 @@ mongoose
     console.log("conectado ao mongoDB")
   })
   .catch((error) => console.log(error))
-app.listen(3000)
+app.listen(8000)

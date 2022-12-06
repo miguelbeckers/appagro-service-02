@@ -45,8 +45,8 @@ router.post('/', async (req, res) => {
   const device = { name, coordinate }
 
   try {
-    await Device.create(device)
-    res.status(201).json({ message: 'dispositivo criado com sucesso' })
+    const created = await Device.create(device)
+    res.status(201).json(created)
   } catch (error) {
     res.status(500).json({ error: error })
   }
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const id = req.params.id
   const { name, coordinate } = req.body
-  const device = { name, coordinate }
+  const device = { name, coordinate, updatedAt: Date.now }
 
   try {
     const updated = await Device.updateOne({ _id: id }, device)
@@ -63,7 +63,7 @@ router.put('/:id', async (req, res) => {
       res.status(404).json({ message: "dispositivo não encontrado" })
       return
     }
-    res.status(200).json(device)
+    res.status(200).json({ message: "medição atualizada com sucesso" })
   } catch (error) {
     res.status(500).json({ error: error })
   }
