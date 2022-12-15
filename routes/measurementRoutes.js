@@ -40,7 +40,7 @@ router.post('/:id', async (req, res) => {
   }
 
   try {
-    const device = await Device.findOne({ _id: id })
+    var device = await Device.findOne({ _id: id })
 
     if (!device) {
       res.status(404).json({ message: "dispositivo não encontrado" })
@@ -50,14 +50,12 @@ router.post('/:id', async (req, res) => {
     const measurement = { value }
     const created = await Measurement.create(measurement);
 
-    try {
-      const updated = await Device.updateOne({ _id: id }, { ...device, measurements: device.measurements.push(created) });
-      if (updated.matchedCount === 0) {
-        res.status(404).json({ message: "falha ao atualizar o dispositivo" })
-        return
-      }
-    } catch (error) {
-      console.log(error)
+    device.measurements = [created];
+
+    const updated = await Device.updateOne({ _id: id }, device);
+    if (updated.matchedCount === 0) {
+      res.status(404).json({ message: "falha ao atualizar o dispositivo" })
+      return
     }
 
     res.status(201).json(created);
@@ -70,7 +68,7 @@ router.post('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const id = req.params.id
   const { value } = req.body
-  const measurement = { value, updatedAt: Date.now }
+  const measurement = { value, updatedAt: Date.now() }
 
   try {
     const updated = await Measurement.updateOne({ _id: id }, measurement)

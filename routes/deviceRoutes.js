@@ -59,8 +59,8 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const id = req.params.id
-  const { name, coordinate } = req.body
-  const device = { name, coordinate, updatedAt: Date.now }
+  const { name, coordinate, area } = req.body
+  const device = { name, coordinate, area, updatedAt: Date.now() }
 
   try {
     const updated = await Device.updateOne({ _id: id }, device)
