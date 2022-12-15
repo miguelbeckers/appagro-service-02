@@ -1,11 +1,11 @@
 const router = require('express').Router()
 const Device = require('../models/Device')
 
-router.get('/hello', (req, res) => {
+router.get('/hello', (_req, res) => {
   res.json({ message: 'hello' })
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   try {
     const devices = await Device.find()
     res.status(200).json(devices)
@@ -30,10 +30,15 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { name, coordinate } = req.body
+  const { name, area, coordinate } = req.body
 
   if (!name) {
     res.status(400).json({ error: 'o nome é obrigatório' })
+    return
+  }
+
+  if (!area) {
+    res.status(400).json({ error: 'a área é obrigatória' })
     return
   }
 
@@ -42,7 +47,7 @@ router.post('/', async (req, res) => {
     return
   }
 
-  const device = { name, coordinate }
+  const device = { name, area, coordinate }
 
   try {
     const created = await Device.create(device)

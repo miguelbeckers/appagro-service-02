@@ -4,11 +4,15 @@ const Device = mongoose.model('Device', {
     type: String,
     required: true
   },
-  updatedAt: {
+  area: {
+    type: String,
+    required: true
+  },
+  createdAt: {
     type: Date,
     default: Date.now
   },
-  createdAt: {
+  updatedAt: {
     type: Date,
     default: Date.now
   },

@@ -2,11 +2,11 @@ const router = require('express').Router()
 const Measurement = require('../models/Measurement')
 const Device = require('../models/Device')
 
-router.get('/hello', (req, res) => {
+router.get('/hello', (_req, res) => {
   res.json({ message: 'hello' })
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   try {
     const measurements = await Measurement.find()
     res.status(200).json(measurements)
@@ -40,27 +40,27 @@ router.post('/:id', async (req, res) => {
   }
 
   try {
-    const oldDevice = await Device.findOne({ _id: id })
+    const device = await Device.findOne({ _id: id })
 
-    if (!oldDevice) {
+    if (!device) {
       res.status(404).json({ message: "dispositivo não encontrado" })
       return
     }
 
     const measurement = { value }
-    const created = await Measurement.create(measurement)
+    const created = await Measurement.create(measurement);
 
-    const measurements = oldDevice.measurements.push(created._id);
-
-    const newDevice = {...oldDevice, measurements}
-    const updated = await Device.updateOne({ _id: id }, newDevice)
-    
-    if(updated.matchedCount === 0){
-      res.status(404).json({ message: "falha ao atualizar o dispositivo" })
-      return
+    try {
+      const updated = await Device.updateOne({ _id: id }, { ...device, measurements: device.measurements.push(created) });
+      if (updated.matchedCount === 0) {
+        res.status(404).json({ message: "falha ao atualizar o dispositivo" })
+        return
+      }
+    } catch (error) {
+      console.log(error)
     }
 
-    res.status(201).json(created)
+    res.status(201).json(created);
 
   } catch (error) {
     res.status(500).json({ error: error })
