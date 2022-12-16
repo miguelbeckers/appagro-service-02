@@ -11,4 +11,4 @@ RUN npm install --production
 #COPY . .
 
 EXPOSE 8000
-CMD [ "node", "server.js" ]
+CMD [ "node","index.js" ]
