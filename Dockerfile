@@ -3,12 +3,10 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY ["*", "/app/"]
+COPY . .
 
-RUN cd /app
 RUN npm install --production
 
-#COPY . .
-
 EXPOSE 8000
+
 CMD [ "node","index.js" ]
